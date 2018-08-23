@@ -95,3 +95,38 @@ exports.voteProduct = ({userId, productId}) => {
         })
         .then(() => true)
 }
+
+exports.getProductDetail = ({userId, productId}) => {
+    return Product.findById(productId)
+        .populate('owner', User)
+        .lean()
+        .then(product => {
+            if (!product) {
+                throw new Error('Product not found.')
+            }
+
+            const {owner} = product
+
+            return Object.assign({}, product, {
+                owner: {
+                    id: owner._id,
+                    email: owner.email,
+                    avatar: getGravatar(owner.email)
+                }
+            })
+        })
+        .then(product => {
+            if (!userId) {
+                return Object.assign({}, product, {voted: false})
+            }
+
+            return Vote.findOne({
+                owner: userId,
+                product: productId
+            }).then((vote) => {
+                const voted = !!vote
+
+                return Object.assign({}, product, {voted})
+            })
+        })
+}

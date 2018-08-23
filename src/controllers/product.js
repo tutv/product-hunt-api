@@ -35,7 +35,12 @@ exports.submitProduct = (req, res) => {
 }
 
 exports.getProductDetail = (req, res) => {
+    const userId = req.userId || false
+    const productId = req.params['id']
 
+    ProductActions.getProductDetail({userId, productId})
+        .then(sendSuccess(req, res))
+        .catch(sendError(req, res))
 }
 
 exports.voteProduct = (req, res) => {
