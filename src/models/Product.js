@@ -2,7 +2,12 @@ const {Schema} = require('mongoose')
 const connection = require('../app.database')
 
 const productSchema = new Schema({
-    owner: {},
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        index: true,
+        require: true
+    },
 
     title: {
         type: String,

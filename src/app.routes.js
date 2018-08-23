@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
+const oauth = require('./middleware/oauth')
+
 /**
  * Register routes.
  */
@@ -18,9 +20,10 @@ router.post('/user/login', userCtrl.login)
  * Products.
  */
 const product = require('./controllers/product')
-router.post('/products', product.submitProduct)
-router.get('/products/:id', product.getProductDetail)
-router.get('/products/:id', product.getProductDetail)
+router.post('/products', oauth.isAuthorized, product.submitProduct)
+router.get('/products', oauth.maybeAuthorized, product.getListProducts)
+router.get('/products/:id', oauth.maybeAuthorized, product.getProductDetail)
+router.post('/products/:id/vote', oauth.isAuthorized, product.voteProduct)
 
 /**
  * Exports.
