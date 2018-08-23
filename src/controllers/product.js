@@ -2,7 +2,16 @@ const ProductActions = require('../actions/ProductActions')
 const {sendSuccess, sendError} = require('../helpers/response')
 
 exports.getListProducts = (req, res) => {
+    const defaultArgs = {
+        page: 1,
+        limit: 10
+    }
 
+    const {page, limit} = Object.assign({}, defaultArgs, req.query)
+
+    ProductActions.getListProducts({page, limit})
+        .then(sendSuccess(req, res))
+        .catch(sendError(req, res))
 }
 
 exports.submitProduct = (req, res) => {
