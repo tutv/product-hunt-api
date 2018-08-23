@@ -1,6 +1,22 @@
 const Confidence = require('confidence')
 
 const data = {
+    jwt: {
+        $filter: "env",
+        $default: {
+            key: '__your_secret_code',
+            expires: '7 days'
+        },
+        staging: {
+            key: process.env.PH_SECRET_KEY || '__your_secret_code',
+            expires: '7 days'
+        },
+        production: {
+            key: process.env.PH_SECRET_KEY || '__your_secret_code',
+            expires: '7 days'
+        }
+    },
+
     port: {
         $filter: 'env',
         $default: process.env.HOST || 1234,
