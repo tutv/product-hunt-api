@@ -14,13 +14,16 @@ exports.register = ({email, password}) => {
         return Promise.reject(new Error('Password must be at least 6 characters.'))
     }
 
-    const user = new User({
-        email,
-        password
-    })
+    return crypto.hashPassword(password)
+        .then(hash => {
+            const user = new User({
+                email,
+                password: hash
+            })
 
-    return user.save()
-        .then(user => true)
+            return user.save()
+                .then(() => true)
+        })
 }
 
 exports.login = ({email, password}) => {
